@@ -1,0 +1,65 @@
+name: QA Automation Tests
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+
+    env:
+      HEADLESS: "true"
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: "8.0.x"
+
+      - name: Restore dependencies
+        run: dotnet restore ./QA-Automation-Exercise.sln
+
+      - name: Build solution
+        run: dotnet build ./QA-Automation-Exercise.sln --no-restore --configuration Release
+
+      - name: Run API tests
+        run: >
+          dotnet test ./QA-Automation-Exercise.sln
+          --no-build
+          --configuration Release
+          --filter "TestCategory=API"
+          --logger "trx;LogFileName=api-tests.trx"
+          --results-directory ./TestResults/API
+
+      - name: Run UI tests
+        run: >
+          dotnet test ./QA-Automation-Exercise.sln
+          --no-build
+          --configuration Release
+          --filter "TestCategory=UI"
+          --logger "trx;LogFileName=ui-tests.trx"
+          --results-directory ./TestResults/UI
+
+      - name: Upload test results
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: test-results
+          path: TestResults
+
+      - name: Upload failure screenshots
+        if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: failure-screenshots
+          path: |
+            **/artifacts/screenshots/**
+          if-no-files-found: ignore
