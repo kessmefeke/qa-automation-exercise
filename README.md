@@ -1,18 +1,46 @@
 # QA Automation Engineer Practical Exercise
 
-A small C# / NUnit automation suite covering both API and UI scenarios from the supplied technical exercise.
+A small C# / NUnit automation suite covering API and UI scenarios from the supplied technical exercise.
+
+The framework is intentionally lightweight. The focus is on readable tests, clear separation of responsibilities, appropriate negative coverage, and CI-ready execution rather than exhaustive test coverage.
 
 ## What is covered
 
 ### API — Restful-Booker
 
-1. **Create and retrieve a booking** — creates unique test data, validates the create response, then retrieves the new booking and verifies it persisted correctly.
-2. **Retrieve a non-existent booking** — validates the API returns `404 Not Found` and that the client handles an empty error response cleanly.
+1. **Create and retrieve a booking** — creates unique test data, validates the create response, then retrieves the booking and verifies that it persisted correctly.
+
+2. **Retrieve a non-existent booking** — validates that the API returns `404 Not Found` and that the client handles an empty error response cleanly.
 
 ### UI — Sauce Demo
 
 1. **Successful purchase journey** — valid login → add product → verify cart → checkout → verify completion message.
-2. **Locked-out user login** — validates a negative authentication path and checks the user-facing error.
+
+2. **Locked-out user login** — validates a negative authentication path and checks the user-facing error message.
+
+## Tech stack
+
+- .NET 8
+- C#
+- NUnit
+- Selenium WebDriver
+- `HttpClient` + `System.Text.Json` for API testing
+- Selenium Manager for browser-driver management
+- GitHub Actions for CI
+
+I deliberately used `HttpClient` rather than adding an API client library such as RestSharp. The API surface in this exercise is small, and the built-in .NET client keeps dependencies and abstractions minimal while still allowing a reusable API client layer.
+
+## Project structure
+
+````text
+Api/                 API client abstractions
+Models/              Request/response models
+Pages/               Selenium Page Objects
+Support/             Shared configuration
+Tests/Api/           API tests
+Tests/UI/            UI tests and browser lifecycle
+.github/workflows/   CI workflow
+
 
 ### Chrome automation note
 
@@ -44,7 +72,7 @@ Pages/               Selenium Page Objects
 Support/             Shared configuration
 Tests/Api/           API tests
 Tests/UI/            UI tests and browser lifecycle
-```
+````
 
 ## Page Object Model approach
 
@@ -108,26 +136,22 @@ Because these are public demo systems, availability and shared-state behaviour a
 
 ## What I would build next
 
-With more time I would add:
+With more time, I would consider:
 
-- configuration via environment/appsettings rather than constants;
-- API cleanup for test-created data where the environment supports reliable authentication;
-- retry only around explicitly identified transient infrastructure failures, not assertion failures;
-- richer diagnostics (request/response logging and browser console/network evidence);
-- parallelisation after confirming test-data and application isolation;
-- cross-browser coverage for the most valuable journeys;
-- CI workflow with API tests on each pull request and UI smoke tests headlessly;
-- published test results and failure screenshots as pipeline artifacts.
+environment-specific configuration using environment variables or appsettings rather than constants;
+API cleanup for test-created data where reliable authentication is available;
+richer diagnostics, including API request/response logging and browser console/network evidence;
+publishing test results in a more readable CI report;
+parallel execution after confirming test-data and application isolation;
+cross-browser coverage for the highest-value UI journeys;
+a browser/environment matrix where the additional execution cost is justified;
+retry handling only for explicitly identified transient infrastructure failures, never to hide genuine assertion failures.
+
+For a larger production suite I would also consider test tagging by purpose, such as smoke/regression, and use those categories to control which suites run at different stages of the delivery pipeline.
 
 ## AI usage
 
-I used ChatGPT to help review the exercise, suggest the initial project
-structure, and accelerate boilerplate such as Page Object and API client
-classes.
-
-I manually reviewed and ran the implementation, fixed compatibility and
-browser-environment issues, selected the test scenarios and assertions,
-and can explain or modify each part of the framework.
+AI-assisted code was treated in the same way as other code: reviewed, executed, debugged and adjusted before inclusion.
 
 ## CI/CD
 
@@ -146,6 +170,4 @@ The pipeline:
 The same test code is used locally and in CI. The `HEADLESS`
 environment variable controls whether Chrome runs with a visible UI.
 
-With more time, I would extend the pipeline with test-result publishing,
-parallel execution, retry strategy for known infrastructure failures,
-browser matrix testing, and environment-specific configuration.
+At the time of submission, all four automated tests pass locally and in the GitHub Actions pipeline.
