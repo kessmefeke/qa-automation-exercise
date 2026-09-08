@@ -6,15 +6,15 @@ The framework is intentionally lightweight. The focus is on readable tests, clea
 
 ## What is covered
 
-### API — Restful-Booker
+### API (Restful-Booker)
 
 1. **Create and retrieve a booking** — creates unique test data, validates the create response, then retrieves the booking and verifies that it persisted correctly.
 
 2. **Retrieve a non-existent booking** — validates that the API returns `404 Not Found` and that the client handles an empty error response cleanly.
 
-### UI — Sauce Demo
+### UI (Sauce Demo)
 
-1. **Successful purchase journey** — valid login → add product → verify cart → checkout → verify completion message.
+1. **Successful purchase journey** — valid login >> add product >> verify cart >> checkout >> verify completion message.
 
 2. **Locked-out user login** — validates a negative authentication path and checks the user-facing error message.
 
@@ -63,15 +63,7 @@ automatically, so a manually installed ChromeDriver is not required.
 
 I deliberately used `HttpClient` rather than adding an API client library such as RestSharp. The API surface in this exercise is small, and the built-in .NET client keeps dependencies and abstractions minimal while still allowing a reusable API client layer.
 
-## Project structure
 
-```text
-Api/                 API client abstractions
-Models/              Request/response models
-Pages/               Selenium Page Objects
-Support/             Shared configuration
-Tests/Api/           API tests
-Tests/UI/            UI tests and browser lifecycle
 ````
 
 ## Page Object Model approach
