@@ -8,15 +8,15 @@ The framework is intentionally lightweight. The focus is on readable tests, clea
 
 ### API (Restful-Booker)
 
-1. **Create and retrieve a booking** — creates unique test data, validates the create response, then retrieves the booking and verifies that it persisted correctly.
+1. **Create and retrieve a booking** : creates unique test data, validates the create response, then retrieves the booking and verifies that it persisted correctly.
 
-2. **Retrieve a non-existent booking** — validates that the API returns `404 Not Found` and that the client handles an empty error response cleanly.
+2. **Retrieve a non-existent booking** : validates that the API returns `404 Not Found` and that the client handles an empty error response cleanly.
 
 ### UI (Sauce Demo)
 
-1. **Successful purchase journey** — valid login >> add product >> verify cart >> checkout >> verify completion message.
+1. **Successful purchase journey** : valid login >> add product >> verify cart >> checkout >> verify completion message.
 
-2. **Locked-out user login** — validates a negative authentication path and checks the user-facing error message.
+2. **Locked-out user login** : validates a negative authentication path and checks the user-facing error message.
 
 ## Tech stack
 
@@ -143,7 +143,7 @@ For a larger production suite I would also consider test tagging by purpose, suc
 
 ## AI usage
 
-AI-assisted code was treated in the same way as other code: reviewed, executed, debugged and adjusted before inclusion.
+Used GPT for help with errors when running setting up framework, for assistance with debuging.
 
 ## CI/CD
 
